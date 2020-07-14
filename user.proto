@@ -1,20 +1,43 @@
 syntax = "proto3";
 
 package user;
+option go_package = "user/rpcs";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
 service UserService {
-    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+        option (google.api.http) = {
+            get: "/v1/users"
+        };
+    };
 
-    rpc GetUser(GetUserRequest) returns (User);
+    rpc GetUser(GetUserRequest) returns (User) {
+        option (google.api.http) = {
+            get: "/v1/users/{id}"
+        };
+    };
 
-    rpc CreateUser(CreateUserRequest) returns (User);
+    rpc CreateUser(CreateUserRequest) returns (User) {
+        option (google.api.http) = {
+            post: "/v1/users"
+            body: "*"
+        };
+    };
 
-    rpc UpdateUser(UpdateUserRequest) returns (User);
+    rpc UpdateUser(UpdateUserRequest) returns (User) {
+        option (google.api.http) = {
+            put: "/v1/users/{id}"
+            body: "*"
+        };
+    };
 
-    rpc DeleteUser(DeleteUserRequest) returns (Empty);
-}
-
-message Empty {
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/v1/users/{id}"
+        };
+    };
 }
 
 message User {
@@ -34,7 +57,8 @@ message CreateUserRequest {
 }
 
 message UpdateUserRequest {
-    string name = 1;
+    string id = 1;
+    string name = 2;
 }
 
 message DeleteUserRequest {
